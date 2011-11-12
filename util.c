@@ -44,3 +44,57 @@ AVRational * fft_get_video_aspect_ratio(AVFormatContext *ic) {
     }
     return NULL;
 }
+
+fft_stream_info_list * fft_get_stream_info(AVFormatContext *ic) {
+	fft_stream_info_list *head = NULL;
+	fft_stream_info *node = NULL;
+	if(ic->nb_streams) {
+		head = (fft_stream_info_list *)malloc(sizeof(fft_stream_info_list));
+		if(!head) {
+			return NULL;
+		}
+		head->node = NULL;
+		for(unsigned int i = 0; i < ic->nb_streams; i++) {
+			AVCodec *decoder;
+			node = (fft_stream_info *)malloc(sizeof(fft_stream_info));
+			if(!node) {
+				return NULL;
+			}
+
+			switch(ic->streams[i]->codec->codec_type) {
+				case AVMEDIA_TYPE_AUDIO:
+					node->type = AUDIO;
+					break;
+				case AVMEDIA_TYPE_VIDEO:
+					node->type = VIDEO;
+					break;
+				default:
+					node->type = UNKNOWN;
+			}
+
+			decoder = avcodec_find_decoder(ic->streams[i]->codec->codec_id);
+			if(decoder)
+				node->name = decoder->name;
+			else
+				node->name = NULL;
+			node->next = head->node;
+			head->node = node;
+		}
+		return head;
+	}
+	return NULL;
+}
+
+void fft_free_stream_info_list(fft_stream_info_list *list) {
+	if(!list)
+		return;
+
+	fft_stream_info *node = list->node;
+	while(node) {
+		fft_stream_info *t = node->next;
+		free(node);
+		node = t;
+	}
+
+	free(list);
+}
