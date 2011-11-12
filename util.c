@@ -58,7 +58,7 @@ fft_stream_info_list * fft_get_stream_info(AVFormatContext *ic) {
 			AVCodec *decoder;
 			node = (fft_stream_info *)malloc(sizeof(fft_stream_info));
 			if(!node) {
-				return NULL;
+				goto fail;
 			}
 
 			switch(ic->streams[i]->codec->codec_type) {
@@ -82,6 +82,9 @@ fft_stream_info_list * fft_get_stream_info(AVFormatContext *ic) {
 		}
 		return head;
 	}
+	return NULL;
+fail:
+	fft_free_stream_info_list(head);
 	return NULL;
 }
 
