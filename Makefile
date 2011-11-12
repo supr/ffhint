@@ -1,7 +1,7 @@
-CC?= clang
+CC= clang
 
 LDFLAGS+= -L/usr/lib -lavutil -lavformat -lavcodec -lz -lm 
-CFLAGS+= -std=c99 -I/usr/include/libavutil -I/usr/include/libavformat -I/usr/include/libavcodec -I.
+CFLAGS+=  -g -std=c99 -I/usr/include/libavutil -I/usr/include/libavformat -I/usr/include/libavcodec -I.
 
 SRC=\
 	util.c\
