@@ -5,7 +5,7 @@
 
 AVStream * fft_get_video_stream(AVFormatContext *ic) {
     AVStream * s = NULL;
-    for(int i=0; i < ic->nb_streams; i++ ) {
+    for(unsigned int i=0; i < ic->nb_streams; i++ ) {
         if(ic->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO) {
             s = ic->streams[i];
             return s;
